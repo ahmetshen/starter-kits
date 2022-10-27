@@ -1,0 +1,68 @@
+{
+    "name": "ahmetshen/starter-kits",
+    "description": "A Laravel Starter Kits",
+    "keywords": ["ahmetshen", "starter-kits"],
+    "version": "v0.0.0",
+    "homepage": "https://github.com/ahmetshen/starter-kits",
+    "license": "MIT",
+    "type": "library",
+    "support": {
+        "issues": "https://github.com/ahmetshen/starter-kits/issues",
+        "source": "https://github.com/ahmetshen/starter-kits"
+    },
+    "authors": [
+        {
+            "name": "Ahmet Şen",
+            "email": "ahmetshen.jr@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0.2",
+        "illuminate/config": "^9.0",
+        "illuminate/filesystem": "^9.0",
+        "illuminate/support": "^9.0",
+        "illuminate/validation": "^9.0",
+        "biscolab/laravel-recaptcha": "^5.4",
+        "devmarketer/easynav": "^1.0",
+        "diglactic/laravel-breadcrumbs": "^8.0",
+        "highideas/laravel-users-online": "^3.0",
+        "jenssegers/agent": "^2.6",
+        "laravelcollective/html": "^6.3",
+        "murataygun/tckimlikdogrulama": "^1.0",
+        "realrashid/sweet-alert": "^5.1",
+        "spatie/laravel-activitylog": "^4.6",
+        "spatie/laravel-flash": "^1.9",
+        "spatie/laravel-honeypot": "^4.3",
+        "spatie/laravel-permission": "^5.5",
+        "spatie/laravel-sluggable": "^3.4",
+        "spatie/laravel-translation-loader": "^2.7",
+        "sven/artisan-view": "^3.5",
+        "yadahan/laravel-authentication-log": "^1.5",
+        "yajra/laravel-datatables-oracle": "^10.1",
+        "yazan/laravel-settings": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "AhmetShen\\StarterKits\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AhmetShen\\StarterKits\\StarterKitsServiceProvider"
+            ],
+            "aliases": {
+                "StarterKits": "AhmetShen\\StarterKits\\StarterKitsFacade"
+            }
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
