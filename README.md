@@ -1,6 +1,6 @@
 [
     <p align="center">
-        <img src="https://banners.beyondco.de/starter-kits.png?theme=dark&packageManager=composer+require&packageName=ahmetshen%2Fstarter-kits&pattern=architect&style=style_1&description=A+Laravel+Starter+Kits&md=1&showWatermark=0&fontSize=225px&images=https%3A%2F%2Flaravel.com%2Fimg%2Flogomark.min.svg" alt="starter-kits">
+        <img src="https://banners.beyondco.de/starter-kits.png?theme=dark&packageManager=composer+require&packageName=ahmetshen%2Fstarter-kits&pattern=architect&style=style_1&description=Laravel+Starter+Kits&md=1&showWatermark=0&fontSize=225px&images=https%3A%2F%2Flaravel.com%2Fimg%2Flogomark.min.svg" alt="starter-kits">
     </p>
 ](https://github.com/ahmetshen/starter-kits)
 
@@ -19,7 +19,7 @@
 # starter-kits
 
 ```bash
-A Laravel Starter Kits
+Laravel Starter Kits
 ```
 
 - - - - -
