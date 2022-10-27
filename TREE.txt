@@ -1,0 +1,18 @@
+├── .editorconfig
+├── .gitignore
+├── CHANGELOG.md
+├── composer.json
+├── /config/
+│  └── starter-kits.php
+├── LICENSE.md
+├── README.md
+├── /src/
+│  ├── /Console/
+│  │  ├── InstallCommand.php
+│  │  └── OptimizeConfiguration.php
+│  ├── helpers.php
+│  ├── StarterKits.php
+│  ├── StarterKitsFacade.php
+│  └── StarterKitsServiceProvider.php
+├── TODO.md
+└── TREE.txt
