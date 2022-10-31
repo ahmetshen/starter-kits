@@ -122,7 +122,7 @@ return [
     | Colors
     |--------------------------------------------------------------------------
     |
-    | Here are the dashboard colors.
+    | Dashboard colors.
     |
     */
 
@@ -236,6 +236,10 @@ return [
         'password' => [
             'min' => 8,
             'max' => 20,
+        ],
+        'status' => [
+            'min' => 1,
+            'max' => 1,
         ],
     ],
 
