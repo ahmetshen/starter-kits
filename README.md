@@ -101,7 +101,7 @@ composer dump-autoload
 ```bash
 cls
 
-copy C:\Users\asen\Desktop\Laravel-Copy-Files\AppServiceProvider.php C:\xampp\htdocs\starter-kits\app\Providers\AppServiceProvider.php
+copy C:\Users\asen\Desktop\Laravel-Copy-Files\Providers\AppServiceProvider.php C:\xampp\htdocs\starter-kits\app\Providers\AppServiceProvider.php
 
 ```
 
