@@ -93,7 +93,7 @@ if (! function_exists('viewPath')) {
      */
     function viewPath(string $componentName, string $viewName, string $separator = '.'): mixed
     {
-        $componentName = str($componentName)->lower()->kebab();
+        $componentName = str($componentName)->lower();
 
         $viewName = str($viewName)->lower()->kebab();
 
@@ -112,7 +112,7 @@ if (! function_exists('assetPath')) {
      */
     function assetPath(string $componentName, string $assetName, string $separator = '/'): mixed
     {
-        $componentName = str($componentName)->lower()->kebab();
+        $componentName = str($componentName)->lower();
 
         return StarterKits::assetPath($componentName, $assetName, $separator);
     }
@@ -127,7 +127,7 @@ if (! function_exists('anonymousComponentNamespace')) {
      */
     function anonymousComponentNamespace(string $componentName): mixed
     {
-        $componentName = str($componentName)->lower()->kebab();
+        $componentName = str($componentName)->lower();
 
         return StarterKits::anonymousComponentNamespace($componentName);
     }

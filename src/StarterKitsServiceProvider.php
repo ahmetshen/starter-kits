@@ -33,7 +33,7 @@ class StarterKitsServiceProvider extends ServiceProvider
             return;
         }
 
-        // Registering package commands.
+        // Registering package commands
         $this->commands([
             Console\InstallCommand::class,
             Console\OptimizeConfiguration::class,

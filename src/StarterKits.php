@@ -83,14 +83,10 @@ class StarterKits
                 $autoFocus ? 'autofocus' : null,
                 'required',
                 'data-validation-required-message' => trans('form_validation.required'),
-                'minlength' => setting('password_min', 'length'),
-                'maxlength' => setting('password_max', 'length'),
-                'data-validation-minlength-message' => trans('form_validation.minlength', [
-                    'attribute' => setting('password_min', 'length')
-                ]),
-                'data-validation-maxlength-message' => trans('form_validation.maxlength', [
-                    'attribute' => setting('password_max', 'length')
-                ]),
+                'minlength' => configValue('length.password.min'),
+                'maxlength' => configValue('length.password.max'),
+                'data-validation-minlength-message' => trans('form_validation.minlength', ['attribute' => configValue('length.password.min')]),
+                'data-validation-maxlength-message' => trans('form_validation.maxlength', ['attribute' => configValue('length.password.max')]),
             ],
             'status' => [
                 'id' => $inputName,
@@ -99,14 +95,10 @@ class StarterKits
                 $autoFocus ? 'autofocus' : null,
                 'required',
                 'data-validation-required-message' => trans('form_validation.required'),
-                'minlength' => 1,
-                'maxlength' => 1,
-                'data-validation-minlength-message' => trans('form_validation.minlength', [
-                    'attribute' => 1
-                ]),
-                'data-validation-maxlength-message' => trans('form_validation.maxlength', [
-                    'attribute' => 1
-                ]),
+                'minlength' => configValue('length.status.min'),
+                'maxlength' => configValue('length.status.max'),
+                'data-validation-minlength-message' => trans('form_validation.minlength', ['attribute' => configValue('length.status.min')]),
+                'data-validation-maxlength-message' => trans('form_validation.maxlength', ['attribute' => configValue('length.status.max')]),
             ],
             default => [
                 'id' => $inputName,
@@ -117,12 +109,8 @@ class StarterKits
                 'data-validation-required-message' => trans('form_validation.required'),
                 'minlength' => setting($inputName.'_min', 'length'),
                 'maxlength' => setting($inputName.'_max', 'length'),
-                'data-validation-minlength-message' => trans('form_validation.minlength', [
-                    'attribute' => setting($inputName.'_min', 'length')
-                ]),
-                'data-validation-maxlength-message' => trans('form_validation.maxlength', [
-                    'attribute' => setting($inputName.'_max', 'length')
-                ]),
+                'data-validation-minlength-message' => trans('form_validation.minlength', ['attribute' => setting($inputName.'_min', 'length')]),
+                'data-validation-maxlength-message' => trans('form_validation.maxlength', ['attribute' => setting($inputName.'_max', 'length')]),
             ],
         };
     }
