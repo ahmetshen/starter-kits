@@ -293,12 +293,12 @@ if (! function_exists('fullDateFormat')) {
     /**
      * Full date format.
      *
+     * @param string|null $date
      * @param string $locale
      * @param string $format
-     * @param string|null $date
      * @return string
      */
-    function fullDateFormat(string $locale = 'tr', string $format = 'j F Y l H:i:s', string $date = null): string
+    function fullDateFormat(string $date = null, string $locale = 'tr', string $format = 'j F Y l H:i:s'): string
     {
         if (is_null($date)) {
             $date = Carbon::now();
