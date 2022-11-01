@@ -1,0 +1,208 @@
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
+use Spatie\Flash\Flash;
+use Yazan\Setting\Setting;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register(): void
+    {
+        //
+    }
+
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot(): void
+    {
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
+
+        $this->viewShareData();
+
+        $this->setLocale();
+
+        $this->setConfig();
+
+        $this->bladeComponent();
+
+        $this->flashLevels();
+    }
+
+    /**
+     * View share data.
+     *
+     * @return void
+     */
+    protected function viewShareData(): void
+    {
+        $getGroups = \Yazan\Setting\Models\Setting::select('group')->distinct()->get();
+
+        foreach ($getGroups as $getGroup) {
+            View::share($getGroup->group, Setting::group($getGroup->group));
+
+            unset($getGroup);
+        }
+    }
+
+    /**
+     * Locale settings.
+     *
+     * @return void
+     */
+    protected function setLocale(): void
+    {
+        app()->setLocale(setting('locale', 'app'));
+
+        date_default_timezone_set(setting('timezone', 'app'));
+
+        ini_set('date.timezone', setting('timezone', 'app'));
+
+        setlocale(LC_ALL, setting('locale', 'app'));
+    }
+
+    /**
+     * Config value set.
+     *
+     * @return void
+     */
+    protected function setConfig(): void
+    {
+        $this->setApp();
+
+        $this->setSession();
+
+        $this->setRecaptcha();
+
+        $this->setMail();
+
+        $this->setOther();
+    }
+
+    /**
+     * App config value set.
+     *
+     * @return void
+     */
+    protected function setApp(): void
+    {
+        config([
+            'app.name' => setting('system_name', 'general'),
+            'app.env' => setting('env', 'app'),
+            'app.debug' => checkSettingStatus('debug', 'app'),
+            'app.url' => setting('url', 'app'),
+            'app.asset_url' => setting('asset_url', 'app'),
+            'app.timezone' => setting('timezone', 'app'),
+            'app.locale' => setting('locale', 'app'),
+        ]);
+    }
+
+    /**
+     * Session config value set.
+     *
+     * @return void
+     */
+    protected function setSession(): void
+    {
+        config([
+            'session.driver' => setting('driver', 'session'),
+            'session.lifetime' => setting('lifetime', 'session'),
+            'session.expire_on_close' => true,
+        ]);
+    }
+
+    /**
+     * Recaptcha config value set.
+     *
+     * @return void
+     */
+    protected function setRecaptcha(): void
+    {
+        config([
+            'recaptcha.api_site_key' => setting('site_key', 'recaptcha'),
+            'recaptcha.api_secret_key' => setting('secret_key', 'recaptcha'),
+            'recaptcha.default_language' => setting('locale', 'app'),
+            'recaptcha.skip_ip' => setting('skip_ip', 'recaptcha'),
+        ]);
+    }
+
+    /**
+     * Mail config value set.
+     *
+     * @return void
+     */
+    protected function setMail(): void
+    {
+        $options = mailConfiguration();
+
+        config([
+            'mail.mailers.smtp.host' => $options['mail_host'],
+            'mail.mailers.smtp.port' => $options['mail_port'],
+            'mail.mailers.smtp.encryption' => $options['mail_encryption'],
+            'mail.mailers.smtp.username' => $options['mail_address'],
+            'mail.mailers.smtp.password' => $options['mail_password'],
+            'mail.from.address' => $options['mail_from_address'],
+            'mail.from.name' => setting('system_name', 'general'),
+        ]);
+    }
+
+    /**
+     * Other config value set.
+     *
+     * @return void
+     */
+    protected function setOther(): void
+    {
+        config([
+            'logging.default' => 'daily',
+            'auth.password_timeout' => setting('password_timeout', 'auth'),
+            'cookie-consent.enabled' => checkSettingStatus('cookie_consent', 'general'),
+            'authentication-log.notify' => checkSettingStatus('authentication_log', 'general'),
+            'breadcrumbs.view' => anonymousComponentNamespace('dashboard').'.breadcrumbs',
+        ]);
+    }
+
+    /**
+     * Blade components namespaces.
+     *
+     * @return void
+     */
+    protected function bladeComponent(): void
+    {
+        $components = configValue('components');
+
+        foreach ($components as $component) {
+            Blade::anonymousComponentNamespace(anonymousComponentNamespace($component), $component);
+
+            unset($component);
+        }
+
+        Blade::componentNamespace('AhmetShen\\StarterKits\\View\\Components\\Dashboard', 'dashboard');
+
+        Blade::componentNamespace('AhmetShen\\StarterKits\\View\\Components\\Ui', 'ui');
+    }
+
+    /**
+     * Flash levels.
+     *
+     * @return void
+     */
+    protected function flashLevels(): void
+    {
+        Flash::levels(configValue('levels'));
+    }
+}
