@@ -28,7 +28,7 @@ Laravel Starter Kits
 
 | Package Version |  Laravel Version  |
 |:---------------:|:-----------------:|
-|     v0.0.0      |        v9.3.9     |
+|     v0.0.0      |      v9.3.10      |
 
 - - - - -
 
