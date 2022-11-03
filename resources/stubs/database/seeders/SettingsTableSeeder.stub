@@ -1,0 +1,53 @@
+<?php
+
+namespace Database\Seeders;
+
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use Yazan\Setting\Setting;
+
+class SettingsTableSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run(): void
+    {
+        $this->example();
+    }
+
+    /**
+     * Example settings.
+     *
+     * @return void
+     */
+    protected function example(): void
+    {
+        $data = [
+            [
+                'key' => '',
+                'value' => '',
+                'group' => '',
+            ],
+        ];
+
+        $this->createSettings($data);
+    }
+
+    /**
+     * Create settings.
+     *
+     * @param array $data
+     * @return void
+     */
+    protected function createSettings(array $data = []): void
+    {
+        foreach ($data as $datum) {
+            Setting::set($datum['key'], $datum['value'], $datum['group']);
+
+            unset($datum);
+        }
+    }
+}
