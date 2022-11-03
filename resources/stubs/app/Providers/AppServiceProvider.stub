@@ -80,13 +80,13 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function setLocale(): void
     {
-        app()->setLocale(setting('locale', 'app'));
+        app()->setLocale(setting('locale', 'config.app'));
 
-        date_default_timezone_set(setting('timezone', 'app'));
+        date_default_timezone_set(setting('timezone', 'config.app'));
 
-        ini_set('date.timezone', setting('timezone', 'app'));
+        ini_set('date.timezone', setting('timezone', 'config.app'));
 
-        setlocale(LC_ALL, setting('locale', 'app'));
+        setlocale(LC_ALL, setting('locale', 'config.app'));
     }
 
     /**
@@ -115,13 +115,13 @@ class AppServiceProvider extends ServiceProvider
     protected function setApp(): void
     {
         config([
-            'app.name' => setting('system_name', 'general'),
-            'app.env' => setting('env', 'app'),
-            'app.debug' => checkSettingStatus('debug', 'app'),
-            'app.url' => setting('url', 'app'),
-            'app.asset_url' => setting('asset_url', 'app'),
-            'app.timezone' => setting('timezone', 'app'),
-            'app.locale' => setting('locale', 'app'),
+            'app.name' => setting('name', 'config.app'),
+            'app.env' => setting('env', 'config.app'),
+            'app.debug' => checkSettingStatus('debug', 'config.app'),
+            'app.url' => setting('url', 'config.app'),
+            'app.asset_url' => setting('url', 'config.app'),
+            'app.timezone' => setting('timezone', 'config.app'),
+            'app.locale' => setting('locale', 'config.app'),
         ]);
     }
 
@@ -133,8 +133,8 @@ class AppServiceProvider extends ServiceProvider
     protected function setSession(): void
     {
         config([
-            'session.driver' => setting('driver', 'session'),
-            'session.lifetime' => setting('lifetime', 'session'),
+            'session.driver' => setting('driver', 'config.session'),
+            'session.lifetime' => setting('lifetime', 'config.session'),
             'session.expire_on_close' => true,
         ]);
     }
@@ -149,7 +149,7 @@ class AppServiceProvider extends ServiceProvider
         config([
             'recaptcha.api_site_key' => setting('site_key', 'recaptcha'),
             'recaptcha.api_secret_key' => setting('secret_key', 'recaptcha'),
-            'recaptcha.default_language' => setting('locale', 'app'),
+            'recaptcha.default_language' => setting('locale', 'config.app'),
             'recaptcha.skip_ip' => setting('skip_ip', 'recaptcha'),
         ]);
     }
@@ -170,7 +170,7 @@ class AppServiceProvider extends ServiceProvider
             'mail.mailers.smtp.username' => $options['mail_address'],
             'mail.mailers.smtp.password' => $options['mail_password'],
             'mail.from.address' => $options['mail_from_address'],
-            'mail.from.name' => setting('system_name', 'general'),
+            'mail.from.name' => setting('name', 'config.app'),
         ]);
     }
 
@@ -183,8 +183,7 @@ class AppServiceProvider extends ServiceProvider
     {
         config([
             'logging.default' => 'daily',
-            'auth.password_timeout' => setting('password_timeout', 'auth'),
-            'cookie-consent.enabled' => checkSettingStatus('cookie_consent', 'general'),
+            'auth.password_timeout' => setting('password_timeout', 'config.auth'),
             'authentication-log.notify' => checkSettingStatus('authentication_log', 'general'),
             'breadcrumbs.view' => anonymousComponentNamespace('dashboard').'.breadcrumbs',
         ]);

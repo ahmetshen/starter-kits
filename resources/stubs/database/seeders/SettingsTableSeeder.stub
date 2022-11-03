@@ -15,21 +15,211 @@ class SettingsTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->example();
+        $this->config();
+
+        $this->recaptcha();
+
+        $this->rateLimit();
+
+        $this->length();
+
+        $this->route();
+
+        $this->general();
     }
 
     /**
-     * Example settings.
+     * Config settings.
      *
      * @return void
      */
-    protected function example(): void
+    protected function config(): void
     {
         $data = [
             [
-                'key' => '',
-                'value' => '',
-                'group' => '',
+                'key' => 'locale',
+                'value' => 'tr',
+                'group' => 'config.app',
+            ],
+            [
+                'key' => 'timezone',
+                'value' => 'Europe/Istanbul',
+                'group' => 'config.app',
+            ],
+            [
+                'key' => 'name',
+                'value' => 'StarterKits',
+                'group' => 'config.app',
+            ],
+            [
+                'key' => 'env',
+                'value' => (app()->environment('local')) ? 'local' : 'production',
+                'group' => 'config.app',
+            ],
+            [
+                'key' => 'debug',
+                'value' => (app()->environment('local')) ? 'active' : 'passive',
+                'group' => 'config.app',
+            ],
+            [
+                'key' => 'url',
+                'value' => 'http://starter-kits.test',
+                'group' => 'config.app',
+            ],
+            [
+                'key' => 'driver',
+                'value' => 'database',
+                'group' => 'config.session',
+            ],
+            [
+                'key' => 'lifetime',
+                'value' => 60,
+                'group' => 'config.session',
+            ],
+            [
+                'key' => 'password_timeout',
+                'value' => 1800,
+                'group' => 'config.auth',
+            ],
+        ];
+
+        $this->createSettings($data);
+    }
+
+    /**
+     * Recaptcha settings.
+     *
+     * @return void
+     */
+    protected function recaptcha(): void
+    {
+        $data = [
+            [
+                'key' => 'site_key',
+                'value' => (app()->environment('local')) ? '-' : '',
+                'group' => 'recaptcha',
+            ],
+            [
+                'key' => 'secret_key',
+                'value' => (app()->environment('local')) ? '-' : '',
+                'group' => 'recaptcha',
+            ],
+            [
+                'key' => 'skip_ip',
+                'value' => (app()->environment('local')) ? '127.0.0.1' : '-',
+                'group' => 'recaptcha',
+            ],
+        ];
+
+        $this->createSettings($data);
+    }
+
+    /**
+     * Rate limit.
+     *
+     * @return void
+     */
+    protected function rateLimit(): void
+    {
+        $data = [
+            [
+                'key' => 'authentication',
+                'value' => 25,
+                'group' => 'rate_limit',
+            ],
+            [
+                'key' => 'verify_email',
+                'value' => 5,
+                'group' => 'rate_limit',
+            ],
+            [
+                'key' => 'forgot_password',
+                'value' => 5,
+                'group' => 'rate_limit',
+            ],
+            [
+                'key' => 'reset_password',
+                'value' => 5,
+                'group' => 'rate_limit',
+            ],
+            [
+                'key' => 'confirm_password',
+                'value' => 5,
+                'group' => 'rate_limit',
+            ],
+            [
+                'key' => 'dashboard',
+                'value' => 50,
+                'group' => 'rate_limit',
+            ],
+        ];
+
+        $this->createSettings($data);
+    }
+
+    /**
+     * Length settings.
+     *
+     * @return void
+     */
+    protected function length(): void
+    {
+        $data = [
+            [
+                'key' => 'password_min',
+                'value' => 8,
+                'group' => 'length',
+            ],
+            [
+                'key' => 'password_max',
+                'value' => 20,
+                'group' => 'length',
+            ],
+        ];
+
+        $this->createSettings($data);
+    }
+
+    /**
+     * Route settings.
+     *
+     * @return void
+     */
+    protected function route(): void
+    {
+        $data = [
+            [
+                'key' => 'prefix',
+                'value' => 'dashboard',
+                'group' => 'route',
+            ],
+        ];
+
+        $this->createSettings($data);
+    }
+
+    /**
+     * General settings.
+     *
+     * @return void
+     */
+    protected function general(): void
+    {
+        $data = [
+            [
+                'key' => 'alert_type',
+                'value' => 'toast',
+                'group' => 'general',
+            ],
+            [
+                'key' => 'timer',
+                'value' => 5000,
+                'group' => 'general',
+            ],
+            [
+                'key' => 'authentication_log',
+                'value' => (app()->environment('local')) ? 'passive' : 'active',
+                'group' => 'general',
             ],
         ];
 

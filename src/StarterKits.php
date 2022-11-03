@@ -71,9 +71,10 @@ class StarterKits
      *
      * @param string $inputName
      * @param bool $autoFocus
+     * @param string $settingGroupName
      * @return array
      */
-    public function formInputProperties(string $inputName = 'status', bool $autoFocus = false): array
+    public function formInputProperties(string $inputName = 'status', bool $autoFocus = false, string $settingGroupName = 'length'): array
     {
         return match ($inputName) {
             'current_password', 'new_password', 'new_password_confirmation' => [
@@ -83,22 +84,22 @@ class StarterKits
                 $autoFocus ? 'autofocus' : null,
                 'required',
                 'data-validation-required-message' => trans('form_validation.required'),
-                'minlength' => configValue('length.password.min'),
-                'maxlength' => configValue('length.password.max'),
-                'data-validation-minlength-message' => trans('form_validation.minlength', ['attribute' => configValue('length.password.min')]),
-                'data-validation-maxlength-message' => trans('form_validation.maxlength', ['attribute' => configValue('length.password.max')]),
+                'minlength' => setting('password_min', $settingGroupName),
+                'maxlength' => setting('password_max', $settingGroupName),
+                'data-validation-minlength-message' => trans('form_validation.minlength', ['attribute' => setting('password_min', $settingGroupName)]),
+                'data-validation-maxlength-message' => trans('form_validation.maxlength', ['attribute' => setting('password_max', $settingGroupName)]),
             ],
             'status' => [
-                'id' => $inputName,
+                'id' => 'status',
                 'class' => 'form-control',
-                'placeholder' => trans('placeholder.'.$inputName),
+                'placeholder' => trans('placeholder.status'),
                 $autoFocus ? 'autofocus' : null,
                 'required',
                 'data-validation-required-message' => trans('form_validation.required'),
-                'minlength' => configValue('length.status.min'),
-                'maxlength' => configValue('length.status.max'),
-                'data-validation-minlength-message' => trans('form_validation.minlength', ['attribute' => configValue('length.status.min')]),
-                'data-validation-maxlength-message' => trans('form_validation.maxlength', ['attribute' => configValue('length.status.max')]),
+                'minlength' => 1,
+                'maxlength' => 1,
+                'data-validation-minlength-message' => trans('form_validation.minlength', ['attribute' => 1]),
+                'data-validation-maxlength-message' => trans('form_validation.maxlength', ['attribute' => 1]),
             ],
             default => [
                 'id' => $inputName,
@@ -107,10 +108,10 @@ class StarterKits
                 $autoFocus ? 'autofocus' : null,
                 'required',
                 'data-validation-required-message' => trans('form_validation.required'),
-                'minlength' => setting($inputName.'_min', 'length'),
-                'maxlength' => setting($inputName.'_max', 'length'),
-                'data-validation-minlength-message' => trans('form_validation.minlength', ['attribute' => setting($inputName.'_min', 'length')]),
-                'data-validation-maxlength-message' => trans('form_validation.maxlength', ['attribute' => setting($inputName.'_max', 'length')]),
+                'minlength' => setting($inputName.'_min', $settingGroupName),
+                'maxlength' => setting($inputName.'_max', $settingGroupName),
+                'data-validation-minlength-message' => trans('form_validation.minlength', ['attribute' => setting($inputName.'_min', $settingGroupName)]),
+                'data-validation-maxlength-message' => trans('form_validation.maxlength', ['attribute' => setting($inputName.'_max', $settingGroupName)]),
             ],
         };
     }
