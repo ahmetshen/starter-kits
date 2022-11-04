@@ -193,40 +193,4 @@ class Module extends Model
             get: fn ($value) => ($value === true) ? trans('status.active') : trans('status.passive'),
         );
     }
-
-    /**
-     * Interact with the module's created_at.
-     *
-     * @return Attribute
-     */
-    protected function createdAt(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => fullDateFormat($value),
-        );
-    }
-
-    /**
-     * Interact with the module's updated_at.
-     *
-     * @return Attribute
-     */
-    protected function updatedAt(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => fullDateFormat($value),
-        );
-    }
-
-    /**
-     * Interact with the module's deleted_at.
-     *
-     * @return Attribute
-     */
-    protected function deletedAt(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => empty($value) ? '-' : fullDateFormat($value),
-        );
-    }
 }

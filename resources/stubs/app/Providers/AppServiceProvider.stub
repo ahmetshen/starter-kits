@@ -147,10 +147,10 @@ class AppServiceProvider extends ServiceProvider
     protected function setRecaptcha(): void
     {
         config([
-            'recaptcha.api_site_key' => setting('site_key', 'recaptcha'),
-            'recaptcha.api_secret_key' => setting('secret_key', 'recaptcha'),
+            'recaptcha.api_site_key' => setting('site_key', 'config.recaptcha'),
+            'recaptcha.api_secret_key' => setting('secret_key', 'config.recaptcha'),
             'recaptcha.default_language' => setting('locale', 'config.app'),
-            'recaptcha.skip_ip' => setting('skip_ip', 'recaptcha'),
+            'recaptcha.skip_ip' => setting('skip_ip', 'config.recaptcha'),
         ]);
     }
 
@@ -184,7 +184,7 @@ class AppServiceProvider extends ServiceProvider
         config([
             'logging.default' => 'daily',
             'auth.password_timeout' => setting('password_timeout', 'config.auth'),
-            'authentication-log.notify' => checkSettingStatus('authentication_log', 'general'),
+            'authentication-log.notify' => checkSettingStatus('notify', 'config.authentication_log'),
             'breadcrumbs.view' => anonymousComponentNamespace('dashboard').'.breadcrumbs',
         ]);
     }
