@@ -72,13 +72,16 @@ if (! function_exists('formInputProperties')) {
      *
      * @param string $inputName
      * @param bool $autoFocus
+     * @param string $settingGroupName
      * @return mixed
      */
-    function formInputProperties(string $inputName = 'status', bool $autoFocus = false): mixed
+    function formInputProperties(string $inputName = 'status', bool $autoFocus = false, string $settingGroupName = 'length'): mixed
     {
         $inputName = str($inputName)->lower()->snake();
 
-        return StarterKits::formInputProperties($inputName, $autoFocus);
+        $settingGroupName = str($settingGroupName)->lower()->snake();
+
+        return StarterKits::formInputProperties($inputName, $autoFocus, $settingGroupName);
     }
 }
 
@@ -245,11 +248,11 @@ if (! function_exists('dashboardRoute')) {
     function dashboardRoute(string $routeName = null): mixed
     {
         if (is_null($routeName)) {
-            return setting('prefix', 'general');
+            return setting('prefix', 'route');
         } else {
             $routeName = str($routeName)->lower()->kebab();
 
-            return setting('prefix', 'general').'.'.$routeName;
+            return setting('prefix', 'route').'.'.$routeName;
         }
     }
 }
