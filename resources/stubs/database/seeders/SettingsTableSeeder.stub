@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 use Yazan\Setting\Setting;
 
 class SettingsTableSeeder extends Seeder
@@ -22,6 +23,12 @@ class SettingsTableSeeder extends Seeder
         $this->route();
 
         $this->general();
+
+        $this->maintenance();
+
+        $this->dashboardThemeOption();
+
+        $this->color();
     }
 
     /**
@@ -112,7 +119,7 @@ class SettingsTableSeeder extends Seeder
         $data = [
             [
                 'key' => 'password_min',
-                'value' => 8,
+                'value' => 9,
                 'group' => 'length',
             ],
             [
@@ -168,6 +175,36 @@ class SettingsTableSeeder extends Seeder
                 'value' => 50,
                 'group' => 'route.rate_limit',
             ],
+            [
+                'key' => 'login',
+                'value' => 'active',
+                'group' => 'route.auth',
+            ],
+            [
+                'key' => 'register',
+                'value' => 'passive',
+                'group' => 'route.auth',
+            ],
+            [
+                'key' => 'verify_email',
+                'value' => 'passive',
+                'group' => 'route.auth',
+            ],
+            [
+                'key' => 'confirm_password',
+                'value' => 'active',
+                'group' => 'route.auth',
+            ],
+            [
+                'key' => 'forgot_password',
+                'value' => 'passive',
+                'group' => 'route.auth',
+            ],
+            [
+                'key' => 'reset_password',
+                'value' => 'passive',
+                'group' => 'route.auth',
+            ],
         ];
 
         $this->createSettings($data);
@@ -190,6 +227,165 @@ class SettingsTableSeeder extends Seeder
                 'key' => 'timer',
                 'value' => 5000,
                 'group' => 'general',
+            ],
+            [
+                'key' => 'author',
+                'value' => 'Ahmet ŞEN',
+                'group' => 'general',
+            ],
+            [
+                'key' => 'default_role',
+                'value' => 'user',
+                'group' => 'general',
+            ],
+            [
+                'key' => 'content_number',
+                'value' => 10,
+                'group' => 'general',
+            ],
+            [
+                'key' => 'datatable_paging_type',
+                'value' => 'full_numbers',
+                'group' => 'general',
+            ],
+            [
+                'key' => 'ajax_error_show_animate',
+                'value' => 'animate__tada',
+                'group' => 'general',
+            ],
+            [
+                'key' => 'ajax_error_hide_animate',
+                'value' => 'animate__zoomOutDown',
+                'group' => 'general',
+            ],
+            [
+                'key' => 'default_user_password',
+                'value' => '=sCn4X3-K',
+                'group' => 'general',
+            ],
+        ];
+
+        $this->createSettings($data);
+    }
+
+    /**
+     * Maintenance settings.
+     *
+     * @return void
+     */
+    protected function maintenance(): void
+    {
+        $data = [
+            [
+                'key' => 'redirect',
+                'value' => '/',
+                'group' => 'maintenance',
+            ],
+            [
+                'key' => 'retry',
+                'value' => 60,
+                'group' => 'maintenance',
+            ],
+            [
+                'key' => 'secret',
+                'value' => Str::random(10),
+                'group' => 'maintenance',
+            ],
+            [
+                'key' => 'status',
+                'value' => 503,
+                'group' => 'maintenance',
+            ],
+            [
+                'key' => 'icon',
+                'value' => 'ion-ios7-cog-outline',
+                'group' => 'maintenance',
+            ],
+            [
+                'key' => 'theme',
+                'value' => 'blue',
+                'group' => 'maintenance',
+            ],
+        ];
+
+        $this->createSettings($data);
+    }
+
+    /**
+     * Dashboard theme options settings.
+     *
+     * @return void
+     */
+    protected function dashboardThemeOption(): void
+    {
+        $data = [
+            [
+                'key' => 'body_small_text',
+                'value' => 'passive',
+                'group' => 'theme.dashboard',
+            ],
+            [
+                'key' => 'navbar_small_text',
+                'value' => 'passive',
+                'group' => 'theme.dashboard',
+            ],
+            [
+                'key' => 'brand_small_text',
+                'value' => 'passive',
+                'group' => 'theme.dashboard',
+            ],
+            [
+                'key' => 'sidebar_small_text',
+                'value' => 'passive',
+                'group' => 'theme.dashboard',
+            ],
+            [
+                'key' => 'footer_small_text',
+                'value' => 'passive',
+                'group' => 'theme.dashboard',
+            ],
+            [
+                'key' => 'navbar_color',
+                'value' => 'default',
+                'group' => 'theme.dashboard',
+            ],
+            [
+                'key' => 'accent_color',
+                'value' => 'default',
+                'group' => 'theme.dashboard',
+            ],
+            [
+                'key' => 'sidebar_type',
+                'value' => 'dark',
+                'group' => 'theme.dashboard',
+            ],
+            [
+                'key' => 'sidebar_color',
+                'value' => 'primary',
+                'group' => 'theme.dashboard',
+            ],
+            [
+                'key' => 'brand_color',
+                'value' => 'default',
+                'group' => 'theme.dashboard',
+            ],
+        ];
+
+        $this->createSettings($data);
+    }
+
+    /**
+     * Color settings.
+     *
+     * @return void
+     */
+    protected function color(): void
+    {
+        $data = [
+            [
+                'key' => 'show_confirm_button',
+                'value' => '#3085d6',
+                'group' => 'color',
             ],
         ];
 

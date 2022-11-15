@@ -128,10 +128,10 @@ class StarterKits
     {
         if (in_array($componentName, $this->configValue('components'))) {
             if (configValue('folder.status') === true) {
-                return configValue('folder.name').$separator.componentProperty($componentName, 'folder_name').$separator.componentProperty($componentName, 'theme_name').$separator.'pages'.$separator.$viewName;
+                return configValue('folder.name').$separator.componentProperty($componentName, 'folder_name').$separator.componentProperty($componentName, 'theme_name').$separator.$viewName;
             }
 
-            return componentProperty($componentName, 'folder_name').$separator.componentProperty($componentName, 'theme_name').$separator.'pages'.$separator.$viewName;
+            return componentProperty($componentName, 'folder_name').$separator.componentProperty($componentName, 'theme_name').$separator.$viewName;
         } else {
             Log::error('ErrorMessage => '.$componentName.' component not found.');
 

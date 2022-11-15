@@ -1,5 +1,6 @@
 <?php
 
+use AhmetShen\StarterKits\Models\Module;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Filesystem\Filesystem;
@@ -126,13 +127,14 @@ if (! function_exists('anonymousComponentNamespace')) {
      * Anonymous component namespace.
      *
      * @param string $componentName
+     * @param string $separator
      * @return mixed
      */
-    function anonymousComponentNamespace(string $componentName): mixed
+    function anonymousComponentNamespace(string $componentName, string $separator = '.'): mixed
     {
         $componentName = str($componentName)->lower();
 
-        return StarterKits::anonymousComponentNamespace($componentName);
+        return StarterKits::anonymousComponentNamespace($componentName, $separator);
     }
 }
 
@@ -144,7 +146,7 @@ if (! function_exists('componentProperty')) {
      * @param string $componentKey
      * @return mixed
      */
-    function componentProperty(string $componentName, string $componentKey): mixed
+    function componentProperty(string $componentName = 'dashboard', string $componentKey = 'folder_name'): mixed
     {
         $componentName = str($componentName)->lower();
 
@@ -211,7 +213,7 @@ if (! function_exists('setting')) {
      * @param string $group
      * @return mixed
      */
-    function setting(string $key, string $group): mixed
+    function setting(string $key = 'prefix', string $group = 'route'): mixed
     {
         $key = str($key)->lower()->snake();
 
@@ -229,7 +231,7 @@ if (! function_exists('checkSettingStatus')) {
      * @param string $settingGroup
      * @return bool
      */
-    function checkSettingStatus(string $settingKey, string $settingGroup): bool
+    function checkSettingStatus(string $settingKey = 'prefix', string $settingGroup = 'route'): bool
     {
         return match (setting($settingKey, $settingGroup)) {
             'active' => true,
@@ -248,11 +250,11 @@ if (! function_exists('dashboardRoute')) {
     function dashboardRoute(string $routeName = null): mixed
     {
         if (is_null($routeName)) {
-            return setting('prefix', 'route');
+            return setting();
         } else {
             $routeName = str($routeName)->lower()->kebab();
 
-            return setting('prefix', 'route').'.'.$routeName;
+            return setting().'.'.$routeName;
         }
     }
 }
@@ -266,9 +268,28 @@ if (! function_exists('uiAvatar')) {
      */
     function uiAvatar(string $avatarName = 'John Doe'): string
     {
-        $avatarName = str($avatarName)->lower()->title()->replace(' ', '+');
+        $avatarName = str($avatarName)->lower()->title();
 
         return 'https://ui-avatars.com/api/?name='.urlencode($avatarName);
+    }
+}
+
+if (! function_exists('getModules')) {
+    /**
+     * Get all modules.
+     *
+     * @param string $position
+     * @param bool $status
+     * @return mixed
+     */
+    function getModules(string $position = 'sidebar', bool $status = true): mixed
+    {
+        $position = str($position)->lower();
+
+        return Module::where([
+            ['status', '=', $status],
+            ['position', '=', $position],
+        ])->orderBy('order')->get();
     }
 }
 
@@ -297,22 +318,21 @@ if (! function_exists('fullDateFormat')) {
      * Full date format.
      *
      * @param string|null $date
-     * @param string $locale
      * @param string $format
      * @return string
      */
-    function fullDateFormat(string $date = null, string $locale = 'tr', string $format = 'j F Y l H:i:s'): string
+    function fullDateFormat(string $date = null, string $format = 'j F Y l H:i:s'): string
     {
         if (is_null($date)) {
             $date = Carbon::now();
 
-            return $date->locale($locale)
+            return $date->locale(config('app.locale'))
                         ->translatedFormat($format);
         }
 
         $date = Carbon::parse($date);
 
-        return $date->locale($locale)
+        return $date->locale(config('app.locale'))
                     ->translatedFormat($format);
     }
 }
@@ -326,7 +346,7 @@ if (! function_exists('changeDateFormat')) {
      * @param string $defaultFormat
      * @return string
      */
-    function changeDateFormat(string $date, string $newFormat = 'd.m.Y H:i:s', string $defaultFormat = 'Y-m-d H:i:s'): string
+    function changeDateFormat(string $date, string $newFormat = 'j F Y l H:i:s', string $defaultFormat = 'Y-m-d H:i:s'): string
     {
         return Carbon::createFromFormat($defaultFormat, $date)->format($newFormat);
     }
@@ -468,7 +488,7 @@ if (! function_exists('showMessage')) {
         $type = ($type === 'danger') ? 'error' : $type;
 
         return match (setting('alert_type', 'general')) {
-            'alert' => alert(trans('alert.'.$type),$message, $type)->showConfirmButton(trans('button.close'), '#3085d6')->autoClose(setting('timer', 'general'))->timerProgressBar(),
+            'alert' => alert(trans('alert.'.$type),$message, $type)->showConfirmButton(trans('button.close'), setting('show_confirm_button', 'color'))->autoClose(setting('timer', 'general'))->timerProgressBar(),
             'toast' => toast($message,$type)->autoClose(setting('timer', 'general'))->timerProgressBar(),
             'flash' => flash()->{$type}($message),
         };
