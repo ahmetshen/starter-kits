@@ -41,9 +41,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->viewShareData();
 
-        $this->locale();
-
-        $this->config();
+        $this->configSetting();
 
         $this->bladeComponent();
 
@@ -68,7 +66,7 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Model observers.
+     * Model observe.
      *
      * @return void
      */
@@ -94,28 +92,14 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Locale settings.
+     * Config value setting.
      *
      * @return void
      */
-    protected function locale(): void
+    protected function configSetting(): void
     {
-        app()->setLocale(setting('locale', 'config.app'));
-
-        date_default_timezone_set(setting('timezone', 'config.app'));
-
-        ini_set('date.timezone', setting('timezone', 'config.app'));
-
-        setlocale(LC_ALL, setting('locale', 'config.app'));
-    }
-
-    /**
-     * Config value set.
-     *
-     * @return void
-     */
-    protected function config(): void
-    {
+        $this->localeConfig();
+    
         $this->appConfig();
 
         $this->sessionConfig();
@@ -128,7 +112,23 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * App config value set.
+     * Config locale setting.
+     *
+     * @return void
+     */
+    protected function localeConfig(): void
+    {
+        app()->setLocale(setting('locale', 'config.app'));
+
+        date_default_timezone_set(setting('timezone', 'config.app'));
+
+        ini_set('date.timezone', setting('timezone', 'config.app'));
+
+        setlocale(LC_ALL, setting('locale', 'config.app'));
+    }
+
+    /**
+     * Config app setting.
      *
      * @return void
      */
@@ -146,7 +146,7 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Session config value set.
+     * Config session setting.
      *
      * @return void
      */
@@ -160,7 +160,7 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Recaptcha config value set.
+     * Config recaptcha setting.
      *
      * @return void
      */
@@ -175,7 +175,7 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Mail config value set.
+     * Config mail setting.
      *
      * @return void
      */
@@ -195,7 +195,7 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Other config value set.
+     * Config other setting.
      *
      * @return void
      */
