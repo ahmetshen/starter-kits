@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rules\Password;
 use Spatie\Flash\Flash;
 use Yazan\Setting\Setting;
 
@@ -34,17 +35,36 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
+        $this->passwordDefaults();
+
         $this->modelObserve();
 
         $this->viewShareData();
 
-        $this->setLocale();
+        $this->locale();
 
-        $this->setConfig();
+        $this->config();
 
         $this->bladeComponent();
 
         $this->flashLevels();
+    }
+
+    /**
+     * Password default validation rules.
+     *
+     * @return void
+     */
+    protected function passwordDefaults(): void
+    {
+        Password::defaults(function () {
+            return Password::min(setting('password_min', 'length'))
+                ->mixedCase()
+                ->letters()
+                ->numbers()
+                ->symbols()
+                ->uncompromised();
+        });
     }
 
     /**
@@ -64,12 +84,12 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function viewShareData(): void
     {
-        $getGroups = \Yazan\Setting\Models\Setting::select('group')->distinct()->get();
+        $settingGroups = \Yazan\Setting\Models\Setting::select('group')->distinct()->get();
 
-        foreach ($getGroups as $getGroup) {
-            View::share($getGroup->group, Setting::group($getGroup->group));
+        foreach ($settingGroups as $settingGroup) {
+            View::share($settingGroup->group, Setting::group($settingGroup->group));
 
-            unset($getGroup);
+            unset($settingGroup);
         }
     }
 
@@ -78,7 +98,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function setLocale(): void
+    protected function locale(): void
     {
         app()->setLocale(setting('locale', 'config.app'));
 
@@ -94,17 +114,17 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function setConfig(): void
+    protected function config(): void
     {
-        $this->setApp();
+        $this->appConfig();
 
-        $this->setSession();
+        $this->sessionConfig();
 
-        $this->setRecaptcha();
+        $this->recaptchaConfig();
 
-        $this->setMail();
+        $this->mailConfig();
 
-        $this->setOther();
+        $this->otherConfig();
     }
 
     /**
@@ -112,7 +132,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function setApp(): void
+    protected function appConfig(): void
     {
         config([
             'app.name' => setting('name', 'config.app'),
@@ -130,7 +150,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function setSession(): void
+    protected function sessionConfig(): void
     {
         config([
             'session.driver' => setting('driver', 'config.session'),
@@ -144,7 +164,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function setRecaptcha(): void
+    protected function recaptchaConfig(): void
     {
         config([
             'recaptcha.api_site_key' => setting('site_key', 'config.recaptcha'),
@@ -159,7 +179,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function setMail(): void
+    protected function mailConfig(): void
     {
         $options = mailConfiguration();
 
@@ -179,7 +199,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function setOther(): void
+    protected function otherConfig(): void
     {
         config([
             'logging.default' => 'daily',
