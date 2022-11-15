@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rules\Password;
 use Spatie\Flash\Flash;
 use Yazan\Setting\Setting;
 
@@ -34,13 +35,13 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
+        $this->passwordDefaults();
+
         $this->modelObserve();
 
         $this->viewShareData();
 
-        $this->setLocale();
-
-        $this->setConfig();
+        $this->configSetting();
 
         $this->bladeComponent();
 
@@ -48,7 +49,24 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Model observers.
+     * Password default validation rules.
+     *
+     * @return void
+     */
+    protected function passwordDefaults(): void
+    {
+        Password::defaults(function () {
+            return Password::min(setting('password_min', 'length'))
+                ->mixedCase()
+                ->letters()
+                ->numbers()
+                ->symbols()
+                ->uncompromised();
+        });
+    }
+
+    /**
+     * Model observe.
      *
      * @return void
      */
@@ -64,21 +82,41 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function viewShareData(): void
     {
-        $getGroups = \Yazan\Setting\Models\Setting::select('group')->distinct()->get();
+        $settingGroups = \Yazan\Setting\Models\Setting::select('group')->distinct()->get();
 
-        foreach ($getGroups as $getGroup) {
-            View::share($getGroup->group, Setting::group($getGroup->group));
+        foreach ($settingGroups as $settingGroup) {
+            View::share($settingGroup->group, Setting::group($settingGroup->group));
 
-            unset($getGroup);
+            unset($settingGroup);
         }
     }
 
     /**
-     * Locale settings.
+     * Config value setting.
      *
      * @return void
      */
-    protected function setLocale(): void
+    protected function configSetting(): void
+    {
+        $this->localeConfig();
+    
+        $this->appConfig();
+
+        $this->sessionConfig();
+
+        $this->recaptchaConfig();
+
+        $this->mailConfig();
+
+        $this->otherConfig();
+    }
+
+    /**
+     * Config locale setting.
+     *
+     * @return void
+     */
+    protected function localeConfig(): void
     {
         app()->setLocale(setting('locale', 'config.app'));
 
@@ -90,29 +128,11 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Config value set.
+     * Config app setting.
      *
      * @return void
      */
-    protected function setConfig(): void
-    {
-        $this->setApp();
-
-        $this->setSession();
-
-        $this->setRecaptcha();
-
-        $this->setMail();
-
-        $this->setOther();
-    }
-
-    /**
-     * App config value set.
-     *
-     * @return void
-     */
-    protected function setApp(): void
+    protected function appConfig(): void
     {
         config([
             'app.name' => setting('name', 'config.app'),
@@ -126,11 +146,11 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Session config value set.
+     * Config session setting.
      *
      * @return void
      */
-    protected function setSession(): void
+    protected function sessionConfig(): void
     {
         config([
             'session.driver' => setting('driver', 'config.session'),
@@ -140,11 +160,11 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Recaptcha config value set.
+     * Config recaptcha setting.
      *
      * @return void
      */
-    protected function setRecaptcha(): void
+    protected function recaptchaConfig(): void
     {
         config([
             'recaptcha.api_site_key' => setting('site_key', 'config.recaptcha'),
@@ -155,11 +175,11 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Mail config value set.
+     * Config mail setting.
      *
      * @return void
      */
-    protected function setMail(): void
+    protected function mailConfig(): void
     {
         $options = mailConfiguration();
 
@@ -175,11 +195,11 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Other config value set.
+     * Config other setting.
      *
      * @return void
      */
-    protected function setOther(): void
+    protected function otherConfig(): void
     {
         config([
             'logging.default' => 'daily',
