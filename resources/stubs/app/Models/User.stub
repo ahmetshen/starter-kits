@@ -1,0 +1,127 @@
+<?php
+
+namespace App\Models;
+
+use HighIdeas\UsersOnline\Traits\UsersOnlineTrait;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Permission\Traits\HasRoles;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
+use Yadahan\AuthenticationLog\AuthenticationLogable;
+use Yazan\Setting\Traits\HasSetting;
+
+class User extends Authenticatable implements MustVerifyEmail
+{
+    use HasApiTokens, Notifiable, HasRoles, AuthenticationLogable, LogsActivity, SoftDeletes, HasSlug, HasSetting, UsersOnlineTrait;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'uuid',
+        'name',
+        'slug',
+        'email',
+        'email_verified_at',
+        'password',
+        'ip_address',
+        'banned_at',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'banned_at' => 'datetime',
+    ];
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted(): void
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            $user->uuid = (string) Str::uuid();
+            $user->email_verified_at = now();
+        });
+    }
+
+    /**
+     * Activity log options.
+     *
+     * @return LogOptions
+     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+                    ->logAll()
+                    ->logFillable()
+                    ->setDescriptionForEvent(fn(string $eventName) => 'This model has been '.$eventName)
+                    ->useLogName('Users');
+    }
+
+    /**
+     * Get the options for generating the slug.
+     *
+     * @return SlugOptions
+     */
+    public function getSlugOptions() : SlugOptions
+    {
+        return SlugOptions::create()
+                    ->generateSlugsFrom('name')
+                    ->saveSlugsTo('slug');
+    }
+
+    /**
+     * Interact with the user's name.
+     *
+     * @return Attribute
+     */
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => str($value)->lower()->upper(),
+            set: fn ($value) => str($value)->lower()->title(),
+        );
+    }
+
+    /**
+     * Interact with the user's email.
+     *
+     * @return Attribute
+     */
+    protected function email(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => Str::mask($value, '*', 5),
+            set: fn ($value) => str($value)->lower(),
+        );
+    }
+}
