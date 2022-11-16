@@ -127,6 +127,26 @@ class SettingsTableSeeder extends Seeder
                 'value' => 20,
                 'group' => 'length',
             ],
+            [
+                'key' => 'email_min',
+                'value' => 6,
+                'group' => 'length',
+            ],
+            [
+                'key' => 'email_max',
+                'value' => 100,
+                'group' => 'length',
+            ],
+            [
+                'key' => 'name_min',
+                'value' => 5,
+                'group' => 'length',
+            ],
+            [
+                'key' => 'name_max',
+                'value' => 100,
+                'group' => 'length',
+            ],
         ];
 
         $this->createSettings($data);
@@ -385,6 +405,11 @@ class SettingsTableSeeder extends Seeder
             [
                 'key' => 'show_confirm_button',
                 'value' => '#3085d6',
+                'group' => 'color',
+            ],
+            [
+                'key' => 'profile_card',
+                'value' => 'primary',
                 'group' => 'color',
             ],
         ];
