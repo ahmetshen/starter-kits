@@ -82,9 +82,9 @@ class InstallCommand extends Command
 
             if ((new Filesystem)->exists(base_path('routes/'.$fileName.'.php'))) {
                 (new Filesystem)->delete(base_path('routes/'.$fileName.'.php'));
-            } else {
-                (new Filesystem)->copy(__DIR__.'/../../resources/stubs/routes/'.$fileName.'.stub', base_path('routes/'.$fileName.'.php'));
             }
+
+            (new Filesystem)->copy(__DIR__.'/../../resources/stubs/routes/'.$fileName.'.stub', base_path('routes/'.$fileName.'.php'));
 
             unset($routeFile);
         }
