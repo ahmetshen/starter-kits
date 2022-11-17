@@ -19,14 +19,14 @@ return new class extends Migration
             $table->string('slug_case'); // Module name slug(snake_case). (log_viewer, nice_artisan, setting, activity_log vb.)
             $table->string('permission')->default('empty'); // Module permission name. (log_viewer, view_nice_artisan, block_user, empty vb.)
             $table->string('route')->default('index'); // Module route name. (logs, nice_artisan.index, setting.index, activity.index, index vb.)
-            $table->enum('target', ['blank', 'self'])->default('self'); // Module route name target. (_blank, _self vb.)
+            $table->enum('target', ['_blank', '_self'])->default('_self'); // Module route name target. (_blank, _self vb.)
             $table->string('active_class')->nullable(); // Module route active class name. (navResources(<route_active_class_name>) vb.)
             $table->string('color')->nullable(); // Module color. (info, dark, danger, null vb.)
             $table->string('icon')->default('fas fa-home'); // Module icon. (fas fa-file-code, fas fa-cogs, fas fa-binoculars vb.)
             $table->string('text')->nullable(); // Module text. (trans(<activity.menu_name>, <setting.menu_name>) vb.)
             $table->tinyInteger('order')->default(1); // Module order (1, 2, 3 vb.)
             $table->enum('position', ['navbar', 'sidebar'])->default('sidebar'); // Module position. (navbar, sidebar vb.)
-            $table->boolean('status')->default(true); // Module status. (true -> active, false -> passive vb.)
+            $table->enum('status', ['active', 'passive'])->default('active'); // Module status. (active, passive vb.)
             $table->timestamps();
             $table->softDeletes();
         });

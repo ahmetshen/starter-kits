@@ -57,7 +57,7 @@ class Module extends Model
                     ->logAll()
                     ->logFillable()
                     ->setDescriptionForEvent(fn(string $eventName) => 'This model has been '.$eventName)
-                    ->useLogName('Modules');
+                    ->useLogName('modules');
     }
 
     /**
@@ -104,7 +104,6 @@ class Module extends Model
     protected function target(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => '_'.$value,
             set: fn ($value) => str($value)->lower(),
         );
     }
@@ -190,7 +189,7 @@ class Module extends Model
     protected function status(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => ($value === true) ? trans('status.active') : trans('status.passive'),
+            get: fn ($value) => ($value === 'active') ? trans('status.active') : trans('status.passive'),
         );
     }
 }

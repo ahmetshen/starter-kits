@@ -57,11 +57,11 @@ class AppServiceProvider extends ServiceProvider
     {
         Password::defaults(function () {
             return Password::min(setting('password_min', 'length'))
-                ->mixedCase()
-                ->letters()
-                ->numbers()
-                ->symbols()
-                ->uncompromised();
+                            ->mixedCase()
+                            ->letters()
+                            ->numbers()
+                            ->symbols()
+                            ->uncompromised();
         });
     }
 
@@ -99,7 +99,7 @@ class AppServiceProvider extends ServiceProvider
     protected function configSetting(): void
     {
         $this->localeConfig();
-    
+
         $this->appConfig();
 
         $this->sessionConfig();

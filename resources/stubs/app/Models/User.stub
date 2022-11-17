@@ -84,7 +84,7 @@ class User extends Authenticatable implements MustVerifyEmail
                     ->logAll()
                     ->logFillable()
                     ->setDescriptionForEvent(fn(string $eventName) => 'This model has been '.$eventName)
-                    ->useLogName('Users');
+                    ->useLogName('users');
     }
 
     /**

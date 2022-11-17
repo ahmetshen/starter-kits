@@ -35,6 +35,6 @@ class Setting extends Model
                     ->logAll()
                     ->logFillable()
                     ->setDescriptionForEvent(fn(string $eventName) => 'This model has been '.$eventName)
-                    ->useLogName('Setting');
+                    ->useLogName('settings');
     }
 }
