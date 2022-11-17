@@ -217,7 +217,7 @@ if (! function_exists('setting')) {
     {
         $key = str($key)->lower()->snake();
 
-        $group = str($group)->lower()->snake();
+        $group = str($group)->lower();
 
         return Setting::get($key, $group);
     }
@@ -279,17 +279,17 @@ if (! function_exists('getModules')) {
      * Get all modules.
      *
      * @param string $position
-     * @param bool $status
+     * @param string $status
      * @return mixed
      */
-    function getModules(string $position = 'sidebar', bool $status = true): mixed
+    function getModules(string $position = 'sidebar', string $status = 'active'): mixed
     {
         $position = str($position)->lower();
 
-        return Module::where([
-            ['status', '=', $status],
-            ['position', '=', $position],
-        ])->orderBy('order')->get();
+        return Module::where('position', '=', $position)
+                    ->where('status', '=', $status)
+                    ->orderBy('order')
+                    ->get();
     }
 }
 
@@ -341,13 +341,19 @@ if (! function_exists('changeDateFormat')) {
     /**
      * Change date format.
      *
-     * @param string $date
+     * @param string|null $date
      * @param string $newFormat
      * @param string $defaultFormat
      * @return string
      */
-    function changeDateFormat(string $date, string $newFormat = 'j F Y l H:i:s', string $defaultFormat = 'Y-m-d H:i:s'): string
+    function changeDateFormat(string $date = null, string $newFormat = 'j F Y l H:i:s', string $defaultFormat = 'Y-m-d H:i:s'): string
     {
+        if (is_null($date)) {
+            $date = Carbon::now();
+
+            return Carbon::createFromFormat($defaultFormat, $date)->format($newFormat);
+        }
+
         return Carbon::createFromFormat($defaultFormat, $date)->format($newFormat);
     }
 }
@@ -380,6 +386,26 @@ if (! function_exists('userRoleName')) {
     function userRoleName(int $userId = null): mixed
     {
         return is_null($userId) ? auth()->user()->getRoleNames()[0] : User::findOrFail($userId)->getRoleNames()[0];
+    }
+}
+
+if (! function_exists('userAuthentications')) {
+    /**
+     * User authentications.
+     *
+     * @param string $propertyName
+     * @param int|null $userId
+     * @return mixed
+     */
+    function userAuthentications(string $propertyName, int $userId = null): mixed
+    {
+        return match ($propertyName) {
+            'last_login_at' => is_null($userId) ? auth()->user()->lastLoginAt() : User::findOrFail($userId)->lastLoginAt(),
+            'last_login_ip' => is_null($userId) ? auth()->user()->lastLoginIp() : User::findOrFail($userId)->lastLoginIp(),
+            'previous_login_at' => is_null($userId) ? auth()->user()->previousLoginAt() : User::findOrFail($userId)->previousLoginAt(),
+            'previous_login_ip' => is_null($userId) ? auth()->user()->previousLoginIp() : User::findOrFail($userId)->previousLoginIp(),
+            'all' => is_null($userId) ? auth()->user()->authentications : User::findOrFail($userId)->authentications,
+        };
     }
 }
 
@@ -471,7 +497,7 @@ if (! function_exists('superAdminRole')) {
      */
     function superAdminRole(): mixed
     {
-        return configValue('role');
+        return configValue('administrator_role');
     }
 }
 

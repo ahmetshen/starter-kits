@@ -84,10 +84,10 @@ class StarterKits
                 $autoFocus ? 'autofocus' : null,
                 'required',
                 'data-validation-required-message' => trans('form_validation.required'),
-                'minlength' => setting('password_min', $settingGroupName),
-                'maxlength' => setting('password_max', $settingGroupName),
-                'data-validation-minlength-message' => trans('form_validation.minlength', ['attribute' => setting('password_min', $settingGroupName)]),
-                'data-validation-maxlength-message' => trans('form_validation.maxlength', ['attribute' => setting('password_max', $settingGroupName)]),
+                'minlength' => setting('password_min', 'length'),
+                'maxlength' => setting('password_max', 'length'),
+                'data-validation-minlength-message' => trans('form_validation.minlength', ['attribute' => setting('password_min', 'length')]),
+                'data-validation-maxlength-message' => trans('form_validation.maxlength', ['attribute' => setting('password_max', 'length')]),
             ],
             'status' => [
                 'id' => 'status',
@@ -128,10 +128,10 @@ class StarterKits
     {
         if (in_array($componentName, $this->configValue('components'))) {
             if (configValue('folder.status') === true) {
-                return configValue('folder.name').$separator.componentProperty($componentName, 'folder_name').$separator.componentProperty($componentName, 'theme_name').$separator.$viewName;
+                return configValue('folder.name').$separator.componentProperty($componentName).$separator.componentProperty($componentName, 'theme_name').$separator.$viewName;
             }
 
-            return componentProperty($componentName, 'folder_name').$separator.componentProperty($componentName, 'theme_name').$separator.$viewName;
+            return componentProperty($componentName).$separator.componentProperty($componentName, 'theme_name').$separator.$viewName;
         } else {
             Log::error('ErrorMessage => '.$componentName.' component not found.');
 
@@ -151,10 +151,10 @@ class StarterKits
     {
         if (in_array($componentName, $this->configValue('components'))) {
             if (configValue('folder.status') === true) {
-                return asset(configValue('folder.name').$separator.componentProperty($componentName, 'folder_name').$separator.componentProperty($componentName, 'theme_name').$separator.$assetName);
+                return asset(configValue('folder.name').$separator.componentProperty($componentName).$separator.componentProperty($componentName, 'theme_name').$separator.$assetName);
             }
 
-            return asset(componentProperty($componentName, 'folder_name').$separator.componentProperty($componentName, 'theme_name').$separator.$assetName);
+            return asset(componentProperty($componentName).$separator.componentProperty($componentName, 'theme_name').$separator.$assetName);
         } else {
             Log::error('ErrorMessage => '.$componentName.' component not found.');
 
@@ -173,10 +173,10 @@ class StarterKits
     {
         if (in_array($componentName, $this->configValue('components'))) {
             if (configValue('folder.status') === true) {
-                return configValue('folder.name').$separator.componentProperty($componentName, 'folder_name').$separator.componentProperty($componentName, 'theme_name').$separator.'components';
+                return configValue('folder.name').$separator.componentProperty($componentName).$separator.componentProperty($componentName, 'theme_name').$separator.'components';
             }
 
-            return componentProperty($componentName, 'folder_name').$separator.componentProperty($componentName, 'theme_name').$separator.'components';
+            return componentProperty($componentName).$separator.componentProperty($componentName, 'theme_name').$separator.'components';
         } else {
             Log::error('ErrorMessage => '.$componentName.' component not found.');
 
