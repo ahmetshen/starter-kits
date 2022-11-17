@@ -77,7 +77,7 @@ class StarterKits
     public function formInputProperties(string $inputName = 'status', bool $autoFocus = false, string $settingGroupName = 'length'): array
     {
         return match ($inputName) {
-            'current_password', 'new_password', 'new_password_confirmation' => [
+            'current_password', 'new_password', 'new_password_confirmation', 'password', 'password_confirmation' => [
                 'id' => $inputName,
                 'class' => 'form-control',
                 'placeholder' => trans('placeholder.'.$inputName),
