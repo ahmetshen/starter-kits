@@ -3,6 +3,7 @@
 namespace AhmetShen\StarterKits;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rules;
 
 class StarterKits
 {
@@ -77,7 +78,7 @@ class StarterKits
     public function formInputProperties(string $inputName = 'status', bool $autoFocus = false, string $settingGroupName = 'length'): array
     {
         return match ($inputName) {
-            'current_password', 'new_password', 'new_password_confirmation' => [
+            'current_password', 'new_password', 'new_password_confirmation', 'password', 'password_confirmation' => [
                 'id' => $inputName,
                 'class' => 'form-control',
                 'placeholder' => trans('placeholder.'.$inputName),
@@ -182,5 +183,43 @@ class StarterKits
 
             abort(403, $componentName.' component not found.');
         }
+    }
+
+    /**
+     * Default validation rules.
+     *
+     * @param string $validationName
+     * @return array|string[]
+     */
+    public function defaultValidationRules(string $validationName): array
+    {
+        return match ($validationName) {
+            'name' => [
+                'required',
+                'string',
+                'min:'.setting('name_min', 'length'),
+                'max:'.setting('name_max', 'length'),
+                'between:'.setting('name_min', 'length').','.setting('name_max', 'length'),
+            ],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'min:'.setting('email_min', 'length'),
+                'max:'.setting('email_max', 'length'),
+                'between:'.setting('email_min', 'length').','.setting('email_max', 'length'),
+            ],
+            'password' => [
+                'required',
+                'string',
+                'max:'.setting('password_max', 'length'),
+                Rules\Password::defaults(),
+                'between:'.setting('password_min', 'length').','.setting('password_max', 'length'),
+            ],
+            default => [
+                'required',
+                'string',
+            ],
+        };
     }
 }

@@ -520,3 +520,18 @@ if (! function_exists('showMessage')) {
         };
     }
 }
+
+if (! function_exists('defaultValidationRules')) {
+    /**
+     * Default validation rules.
+     *
+     * @param string $validationName
+     * @return mixed
+     */
+    function defaultValidationRules(string $validationName): mixed
+    {
+        $validationName = str($validationName)->lower()->snake();
+
+        return StarterKits::defaultValidationRules($validationName);
+    }
+}
