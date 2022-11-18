@@ -7,7 +7,6 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
@@ -30,21 +29,8 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'min:'.setting('email_min', 'length'),
-                'max:'.setting('email_max', 'length'),
-                'between:'.setting('email_min', 'length').','.setting('email_max', 'length'),
-            ],
-            'password' => [
-                'required',
-                'string',
-                'max:'.setting('password_max', 'length'),
-                Rules\Password::defaults(),
-                'between:'.setting('password_min', 'length').','.setting('password_max', 'length'),
-            ],
+            'email' => defaultValidationRules('email'),
+            'password' => defaultValidationRules('password'),
             recaptchaFieldName() => recaptchaRuleName(),
         ];
     }
@@ -53,6 +39,8 @@ class LoginRequest extends FormRequest
      * Attempt to authenticate the request's credentials.
      *
      * @return void
+     *
+     * @throws ValidationException
      */
     public function authenticate(): void
     {
@@ -73,6 +61,8 @@ class LoginRequest extends FormRequest
      * Ensure the login request is not rate limited.
      *
      * @return void
+     *
+     * @throws ValidationException
      */
     public function ensureIsNotRateLimited(): void
     {

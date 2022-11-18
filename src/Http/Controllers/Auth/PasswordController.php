@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 
 class PasswordController extends Controller
 {
@@ -19,22 +18,8 @@ class PasswordController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $validated = $request->validateWithBag('updatePassword', [
-            'current_password' => [
-                'required',
-                'string',
-                'max:'.setting('password_max', 'length'),
-                Rules\Password::defaults(),
-                'between:'.setting('password_min', 'length').','.setting('password_max', 'length'),
-                'current_password',
-            ],
-            'password' => [
-                'required',
-                'string',
-                'max:'.setting('password_max', 'length'),
-                Rules\Password::defaults(),
-                'between:'.setting('password_min', 'length').','.setting('password_max', 'length'),
-                'confirmed',
-            ],
+            'current_password' => array_merge(defaultValidationRules('password'), ['current_password']),
+            'password' => array_merge(defaultValidationRules('password'), ['confirmed']),
         ]);
 
         $request->user()->update([

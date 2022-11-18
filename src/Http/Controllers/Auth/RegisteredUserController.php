@@ -10,7 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -30,34 +30,15 @@ class RegisteredUserController extends Controller
      *
      * @param Request $request
      * @return RedirectResponse
+     *
+     * @throws ValidationException
      */
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'min:'.setting('name_min', 'length'),
-                'max:'.setting('name_max', 'length'),
-                'between:'.setting('name_min', 'length').','.setting('name_max', 'length'),
-            ],
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'min:'.setting('email_min', 'length'),
-                'max:'.setting('email_max', 'length'),
-                'between:'.setting('email_min', 'length').','.setting('email_max', 'length'),
-                'unique:'.User::class,
-            ],
-            'password' => [
-                'required',
-                'string',
-                'max:'.setting('password_max', 'length'),
-                Rules\Password::defaults(),
-                'between:'.setting('password_min', 'length').','.setting('password_max', 'length'),
-                'confirmed',
-            ],
+            'name' => defaultValidationRules('name'),
+            'email' => array_merge(defaultValidationRules('email'), ['unique:'.User::class]),
+            'password' => array_merge(defaultValidationRules('password'), ['confirmed']),
             recaptchaFieldName() => recaptchaRuleName(),
         ]);
 

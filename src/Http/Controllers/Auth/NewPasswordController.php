@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rules;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class NewPasswordController extends Controller
@@ -30,29 +30,15 @@ class NewPasswordController extends Controller
      *
      * @param Request $request
      * @return RedirectResponse
+     *
+     * @throws ValidationException
      */
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'token' => [
-                'required',
-            ],
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'min:'.setting('email_min', 'length'),
-                'max:'.setting('email_max', 'length'),
-                'between:'.setting('email_min', 'length').','.setting('email_max', 'length'),
-            ],
-            'password' => [
-                'required',
-                'string',
-                'max:'.setting('password_max', 'length'),
-                Rules\Password::defaults(),
-                'between:'.setting('password_min', 'length').','.setting('password_max', 'length'),
-                'confirmed',
-            ],
+            'token' => ['required',],
+            'email' => defaultValidationRules('email'),
+            'password' => array_merge(defaultValidationRules('password'), ['confirmed']),
             recaptchaFieldName() => recaptchaRuleName(),
         ]);
 

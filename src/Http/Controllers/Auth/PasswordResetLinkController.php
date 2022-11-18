@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class PasswordResetLinkController extends Controller
@@ -25,18 +26,13 @@ class PasswordResetLinkController extends Controller
      *
      * @param Request $request
      * @return RedirectResponse
+     *
+     * @throws ValidationException
      */
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'min:'.setting('email_min', 'length'),
-                'max:'.setting('email_max', 'length'),
-                'between:'.setting('email_min', 'length').','.setting('email_max', 'length'),
-            ],
+            'email' => defaultValidationRules('email'),
             recaptchaFieldName() => recaptchaRuleName(),
         ]);
 
