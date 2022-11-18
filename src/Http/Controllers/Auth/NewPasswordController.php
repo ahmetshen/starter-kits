@@ -36,7 +36,7 @@ class NewPasswordController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'token' => ['required',],
+            'token' => ['required'],
             'email' => defaultValidationRules('email'),
             'password' => array_merge(defaultValidationRules('password'), ['confirmed']),
             recaptchaFieldName() => recaptchaRuleName(),
