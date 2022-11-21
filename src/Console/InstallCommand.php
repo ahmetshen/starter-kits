@@ -44,6 +44,9 @@ class InstallCommand extends Command
                 0
             );
 
+            // extension-activity-logs Files...
+            $this->extensionActivityLogs();
+
             // Route Files...
             $this->routeFiles();
 
@@ -66,6 +69,16 @@ class InstallCommand extends Command
         $this->info('starterKits scaffolding installed successfully.');
 
         $this->comment('The installation process was carried out successfully. Please visit your web page.');
+    }
+
+    /**
+     * Log Activity Inside Your Laravel Application
+     *
+     * @return void
+     */
+    protected function extensionActivityLogs(): void
+    {
+        $this->call('extensionActivityLogs:install');
     }
 
     /**
