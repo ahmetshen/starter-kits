@@ -10,6 +10,8 @@ use Illuminate\Support\Str;
 
 class InstallCommand extends Command
 {
+    use DeleteFiles;
+
     /**
      * The name and signature of the console command.
      *
@@ -23,6 +25,22 @@ class InstallCommand extends Command
      * @var string
      */
     protected $description = 'Install the starterKits Components and Resources';
+
+    public array $changeModels = [];
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->changeModels = [
+            'Setting' => base_path('vendor/yazan/laravel-settings/src/Models/Setting.php'),
+        ];
+    }
 
     /**
      * Execute the console command.
@@ -44,20 +62,23 @@ class InstallCommand extends Command
                 0
             );
 
+            // Delete Files...
+            $this->deleteFiles();
+
             // extension-activity-logs Files...
             $this->extensionActivityLogs();
 
-            // Route Files...
-            $this->routeFiles();
-
-            // Database Files...
-            $this->databaseFiles();
+            // App Files...
+            $this->appFiles();
 
             // Config File(s)...
             $this->configFiles();
 
-            // App Files...
-            $this->appFiles();
+            // Database Files...
+            $this->databaseFiles();
+
+            // Route Files...
+            $this->routeFiles();
 
             // Table Migrations...
             $this->tableMigrations();
@@ -72,7 +93,7 @@ class InstallCommand extends Command
     }
 
     /**
-     * Log Activity Inside Your Laravel Application
+     * Log activity inside your laravel application.
      *
      * @return void
      */
@@ -82,29 +103,49 @@ class InstallCommand extends Command
     }
 
     /**
-     * Route Files.
+     * App files.
      *
      * @return void
      */
-    protected function routeFiles(): void
+    protected function appFiles(): void
     {
-        $routeFiles = (new Filesystem)->allFiles(__DIR__.'/../../resources/stubs/routes');
+        $this->modelFiles();
+    }
 
-        foreach ($routeFiles as $routeFile) {
-            $fileName = Str::beforeLast($routeFile->getFilename(), '.stub');
+    /**
+     * Model files.
+     *
+     * @return void
+     */
+    protected function modelFiles(): void
+    {
+        $allModelFiles = (new Filesystem)->allFiles(__DIR__.'/../../resources/stubs/app/Models');
 
-            if ((new Filesystem)->exists(base_path('routes/'.$fileName.'.php'))) {
-                (new Filesystem)->delete(base_path('routes/'.$fileName.'.php'));
+        foreach ($allModelFiles as $allModelFile) {
+            $fileName = Str::beforeLast($allModelFile->getFilename(), '.stub');
+
+            if (Arr::exists($this->changeModels, $fileName)) {
+                (new Filesystem)->copy(__DIR__.'/../../resources/stubs/app/Models/'.$fileName.'.stub', $this->changeModels[$fileName]);
+            } else {
+                (new Filesystem)->copy(__DIR__.'/../../resources/stubs/app/Models/'.$fileName.'.stub', app_path('Models/'.$fileName.'.php'));
             }
 
-            (new Filesystem)->copy(__DIR__.'/../../resources/stubs/routes/'.$fileName.'.stub', base_path('routes/'.$fileName.'.php'));
-
-            unset($routeFile);
+            unset($allModelFile);
         }
     }
 
     /**
-     * Database Files.
+     * Config files.
+     *
+     * @return void
+     */
+    protected function configFiles(): void
+    {
+        (new Filesystem)->copy(__DIR__.'/../../config/starter-kits.php', config_path('starter-kits.php'));
+    }
+
+    /**
+     * Database files.
      *
      * @return void
      */
@@ -116,22 +157,12 @@ class InstallCommand extends Command
     }
 
     /**
-     * Migration Files.
+     * Migration files.
      *
      * @return void
      */
     protected function migrationFiles(): void
     {
-        $allMigrationFiles = (new Filesystem)->allFiles(database_path('migrations'));
-
-        foreach ($allMigrationFiles as $allMigrationFile) {
-            if ((new Filesystem)->exists(database_path('migrations/'.$allMigrationFile->getFilename()))) {
-                (new Filesystem)->delete(database_path('migrations/'.$allMigrationFile->getFilename()));
-            }
-
-            unset($allMigrationFile);
-        }
-
         $migrationFiles = (new Filesystem)->allFiles(__DIR__.'/../../resources/stubs/database/migrations');
 
         foreach ($migrationFiles as $migrationFile) {
@@ -144,22 +175,12 @@ class InstallCommand extends Command
     }
 
     /**
-     * Seeder Files.
+     * Seeder files.
      *
      * @return void
      */
     protected function seederFiles(): void
     {
-        $allSeederFiles = (new Filesystem)->allFiles(database_path('seeders'));
-
-        foreach ($allSeederFiles as $allSeederFile) {
-            if ((new Filesystem)->exists(database_path('seeders/'.$allSeederFile->getFilename()))) {
-                (new Filesystem)->delete(database_path('seeders/'.$allSeederFile->getFilename()));
-            }
-
-            unset($allSeederFile);
-        }
-
         $seederFiles = (new Filesystem)->allFiles(__DIR__.'/../../resources/stubs/database/seeders');
 
         foreach ($seederFiles as $seederFile) {
@@ -172,61 +193,25 @@ class InstallCommand extends Command
     }
 
     /**
-     * Config Files.
+     * Route files.
      *
      * @return void
      */
-    protected function configFiles(): void
+    protected function routeFiles(): void
     {
-        (new Filesystem)->copy(__DIR__.'/../../config/starter-kits.php', config_path('starter-kits.php'));
-    }
+        $routeFiles = (new Filesystem)->allFiles(__DIR__.'/../../resources/stubs/routes');
 
-    /**
-     * App Files.
-     *
-     * @return void
-     */
-    protected function appFiles(): void
-    {
-        $this->modelFiles();
-    }
+        foreach ($routeFiles as $routeFile) {
+            $fileName = Str::beforeLast($routeFile->getFilename(), '.stub');
 
-    /**
-     * Model Files.
-     *
-     * @return void
-     */
-    protected function modelFiles(): void
-    {
-        $allModelFiles = (new Filesystem)->allFiles(__DIR__.'/../../resources/stubs/app/Models');
+            (new Filesystem)->copy(__DIR__.'/../../resources/stubs/routes/'.$fileName.'.stub', base_path('routes/'.$fileName.'.php'));
 
-        $changeModels = [
-            'Setting' => base_path('vendor/yazan/laravel-settings/src/Models/Setting.php'),
-        ];
-
-        foreach ($allModelFiles as $allModelFile) {
-            $fileName = Str::beforeLast($allModelFile->getFilename(), '.stub');
-
-            if (Arr::exists($changeModels, $fileName)) {
-                if ((new Filesystem)->exists($changeModels[$fileName])) {
-                    (new Filesystem)->delete($changeModels[$fileName]);
-                }
-
-                (new Filesystem)->copy(__DIR__.'/../../resources/stubs/app/Models/'.$fileName.'.stub', $changeModels[$fileName]);
-            } else {
-                if ((new Filesystem)->exists(app_path('Models/'.$fileName.'.php'))) {
-                    (new Filesystem)->delete(app_path('Models/'.$fileName.'.php'));
-                }
-
-                (new Filesystem)->copy(__DIR__.'/../../resources/stubs/app/Models/'.$fileName.'.stub', app_path('Models/'.$fileName.'.php'));
-            }
-
-            unset($allModelFile);
+            unset($routeFile);
         }
     }
 
     /**
-     * Table Migrations.
+     * Table migrations.
      *
      * @return void
      */
@@ -242,7 +227,7 @@ class InstallCommand extends Command
     }
 
     /**
-     * Provider Files.
+     * Provider files.
      *
      * @return void
      */
