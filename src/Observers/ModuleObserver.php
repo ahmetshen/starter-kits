@@ -15,14 +15,15 @@ class ModuleObserver
     public function creating(Module $module): void
     {
         if (is_null($module->order)) {
-            $module->order = Module::where('position', '=', $module->position)->max('order') + 1;
+            $module->order = Module::where('position', '=', $module->position)
+                                ->max('order') + 1;
 
             return;
         }
 
         $lowerPriorityModules = Module::where('position', '=', $module->position)
-                                        ->where('order', '>=', $module->order)
-                                        ->get();
+                                    ->where('order', '>=', $module->order)
+                                    ->get();
 
         foreach ($lowerPriorityModules as $lowerPriorityModule) {
             $lowerPriorityModule->order++;
@@ -57,7 +58,8 @@ class ModuleObserver
         }
 
         if (is_null($module->order)) {
-            $module->order = Module::where('position', '=', $module->position)->max('order');
+            $module->order = Module::where('position', '=', $module->position)
+                                ->max('order');
         }
 
         if ($module->getOriginal('order') > $module->order) {
@@ -71,9 +73,9 @@ class ModuleObserver
         }
 
         $lowerPriorityModules = Module::where('position', '=', $module->position)
-                                        ->where('id', '!=', $module->id)
-                                        ->whereBetween('order', $orderRange)
-                                        ->get();
+                                    ->where('id', '!=', $module->id)
+                                    ->whereBetween('order', $orderRange)
+                                    ->get();
 
         foreach ($lowerPriorityModules as $lowerPriorityModule) {
             if ($module->getOriginal('order') < $module->order) {
@@ -108,8 +110,8 @@ class ModuleObserver
     public function deleted(Module $module): void
     {
         $lowerPriorityModules = Module::where('position', '=', $module->position)
-                                        ->where('order', '>', $module->order)
-                                        ->get();
+                                    ->where('order', '>', $module->order)
+                                    ->get();
 
         foreach ($lowerPriorityModules as $lowerPriorityModule) {
             $lowerPriorityModule->order--;
