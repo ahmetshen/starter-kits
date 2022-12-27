@@ -8,7 +8,7 @@
 
 [
     <p align="center">
-        <img src="https://img.shields.io/apm/l/atomic-design-ui.svg?" alt="License">
+        <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
         <img src="https://img.shields.io/badge/License-GPL%20v3-yellow.svg" alt="License">
         <img src="https://img.shields.io/badge/license-AGPL-blue.svg" alt="License">
     </p>
